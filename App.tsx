@@ -41,8 +41,7 @@ type IGraphState = {
   modal: boolean,
   activeItem: any,
   viewModalShow: boolean,
-  todoList: any,
-  test: any
+  graph: any,
 };
   
 class App extends React.Component<IGraphProps, IGraphState> {
@@ -63,33 +62,17 @@ class App extends React.Component<IGraphProps, IGraphState> {
                 completed: false,
                 priority: 1,
                 x: 1,
-                y: 2
+                y: 1
             },
             viewModalShow: false,
-            todoList: {nodes: [], edges: []},
-            test: 0
+            graph: {nodes: [], edges: []},
         };
     
         this.GraphView = React.createRef();
     }
 
     async componentDidMount() {
-        try {
-            let res = await fetch('http://localhost:8000/api/todos/');
-            const todoList = await res.json();
-            res = await fetch('http://localhost:8000/api/edges/');
-            const edges = await res.json();
-
-            this.setState(
-                produce(draft => {
-                    draft.todoList.nodes = todoList
-                    draft.todoList.edges = edges
-                })
-            );
-        } catch (e) {
-          console.log(e);
-        }
-        console.log(this.state.todoList)
+        this.getGraph();
     }
   
     /*
@@ -153,17 +136,17 @@ class App extends React.Component<IGraphProps, IGraphState> {
         }
     };
 
-    getTodoList = async () => {
+    getGraph = async () => {
         try {
             let res = await fetch('http://localhost:8000/api/todos/');
-            const todoList = await res.json();
+            const graph = await res.json();
             res = await fetch('http://localhost:8000/api/edges/');
             const edges = await res.json();
 
             this.setState(
                 produce(draft => {
-                    draft.todoList.nodes = todoList;
-                    draft.todoList.edges = edges;
+                    draft.graph.nodes = graph;
+                    draft.graph.edges = edges;
                 })
             );
         } catch (e) {
@@ -189,7 +172,7 @@ class App extends React.Component<IGraphProps, IGraphState> {
             y,
         };
         axios.post("http://localhost:8000/api/todos/", newItem).then((response) => {
-            this.getTodoList();
+            this.getGraph();
         })
     };
     
@@ -198,7 +181,7 @@ class App extends React.Component<IGraphProps, IGraphState> {
         console.log(this.state.modal)
         this.setState({ activeItem: item, modal: !this.state.modal, viewModalShow: false });
         console.log(this.state.modal)
-        this.getTodoList();
+        this.getGraph();
     };
 
     editItem = async (updatedItem: INode) => {
@@ -210,7 +193,7 @@ class App extends React.Component<IGraphProps, IGraphState> {
             y: updatedItem.y,
         };
         let data = axios.patch(`http://localhost:8000/api/todos/${this.state.activeItem.id}/`, newItem).then((response) => {
-            this.getTodoList();
+            this.getGraph();
         })
         console.log('data:', data)
     }
@@ -219,7 +202,7 @@ class App extends React.Component<IGraphProps, IGraphState> {
         let nodeId = this.state.activeItem.id
         this.deleteEdgesForNode(nodeId);
         let data = axios.delete(`http://localhost:8000/api/todos/${nodeId}/`).then((response) => {
-            this.getTodoList();
+            this.getGraph();
         })
     }
 
@@ -231,12 +214,12 @@ class App extends React.Component<IGraphProps, IGraphState> {
     // Whenever a node is deleted the consumer must delete any connected edges.
     // react-digraph won't call deleteEdge for multi-selected edges, only single edge selections.
     deleteEdgesForNode(nodeID: number) {
-        const { todoList } = this.state;
-        const edgesToDelete = todoList.edges.filter(
+        const { graph } = this.state;
+        const edgesToDelete = graph.edges.filter(
             (edge: IEdge) => edge.source === nodeID || edge.target === nodeID
         );
     
-        const newEdges = todoList.edges.filter(
+        const newEdges = graph.edges.filter(
             (edge: IEdge) => edge.source !== nodeID && edge.target !== nodeID
         );
     
@@ -254,7 +237,7 @@ class App extends React.Component<IGraphProps, IGraphState> {
         // Only add the edge when the source node is not the same as the target
         if (viewEdge.source !== viewEdge.target) {
             axios.post("http://localhost:8000/api/edges/", viewEdge).then((response) => {
-                this.getTodoList();
+                this.getGraph();
             })
 
             this.setState({
@@ -277,7 +260,7 @@ class App extends React.Component<IGraphProps, IGraphState> {
             target: targetViewNode.id
         }
         let data = axios.patch(`http://localhost:8000/api/edges/${viewEdge.id}/`, newEdge).then((response) => {
-            this.getTodoList();
+            this.getGraph();
         })
     };
   
@@ -285,7 +268,7 @@ class App extends React.Component<IGraphProps, IGraphState> {
     onDeleteEdge = (viewEdge: IEdge, edges: IEdge[] = []) => {
         if (edges.length === 0) {
             let data = axios.delete(`http://localhost:8000/api/edges/${viewEdge.id}/`).then((response) => {
-                this.getTodoList();
+                this.getGraph();
             })
         }
     };
@@ -310,7 +293,7 @@ class App extends React.Component<IGraphProps, IGraphState> {
      */
   
     render() {
-        const { nodes, edges } = this.state.todoList;
+        const { nodes, edges } = this.state.graph;
         const { selected, allowMultiselect, layoutEngineType } = this.state;
         const { NodeTypes, NodeSubtypes, EdgeTypes } = GraphConfig;
 
