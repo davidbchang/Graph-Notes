@@ -1,17 +1,18 @@
 # Graph-Notes
 <p>Directed graph editor for note-taking and planning. Written in React and Django.</p>
-<div>Our source code is on Google Colab and is available in our <a href="https://drive.google.com/drive/folders/1lMvRGHcWoixa6oICrDUM6Q6Y3FqNElOk?usp=sharing">Google Drive</a>, which also contains our <a href="https://youtu.be/_kpnJZonmmo">video summary</a> for the project.</div>
 
-## Introduction
-<div><b>Problem:</b> Our goal was to create a classifier that could identify different styles of animation, those being 2D animation, 3D animation, and Stop Motion Animation. Animation is built on the earliest concepts of film - stringing images together in rapid succession to create the illusion of a moving picture. From the first Zoetropes to modern computer rendered 3D animation, the field has advanced a great deal. Along the way, several different types of animation have been developed and even combined with live action film (<i>Who Framed Roger Rabbit?</i>). These distinct styles can easily be identified by the human eye, so our goal is to see if we can train a network to recognize them. We decided to focus on 3 styles of animation: 2D, 3D, and Stop Motion. While these don't by any means cover the entire field of animation, they do cover a vast majority of it. </div>
-<p></p>
-<div><b>2D Animation:</b> This animation style is the kind that we generally associate with older Disney Films like <i>Beauty and the Beast</i> (1991), <i>The Lion King</i> (1994), and <i>Mulan</i> (1998). 2D Animation is generally achieved through frame by frame hand drawings that are strung together in succession.</div>
-<div><b>3D Animation:</b> This animation style is newer than 2D, and relies more on computer technology. This style can be found in films like <i>Toy Story</i> (1995), <i>Tangled</i> (2010), and <i>Frozen</i> (2013). Computer programs are used to model, rig, and render images to achieve this style.</div>
-<div><b>Stop Motion Animation:</b> This animation style is achieved through clay models that are placed, modeled, and photographed to get each frame. This style can be seen in <i>Corpse Bride</i> (2005), <i>Coraline</i> (2009), and <i>The Nightmare Before Christmas</i> (1993).</div>
-<p></p>
-
-
-### Approach
+## Overview
+### Problem
 <p>
-  Initially, our goal was to train a neural network to determine the title of a movie based on an image input of a movie still. We had planned to build a neural network from scratch and train it on a wide variety of non-animated movie stills from <a href="https://www.moviestillsdb.com/">moviestillsdb</a> to see whether our model could recognize the styles and color patterns that a specific movie uses. However, the movie stills images were too high in resolution, typically at around 6240 x 4160 pixels, and after resizing the images down to 128 x 128, the images were too distorted and blurry to be distinguishable from each other. So, we changed our objective, and we instead built two neural network models that learned to classify animated movie stills as 2D-animated, 3D animated, or stop motion animation. We took images from <a href="https://film-grab.com/category/genre/animation/">here</a> and <a href="https://screencapped.net/board/forumdisplay.php?fid=537">here</a>, and we resized each image down to 128 x 256 pixels, which was a small enough size to be efficiently trained on, yet still maintained close to its original dimensions. Our dataset has over 3000 images spread over 45 different movies and 3 classes. We divided the data into training + validation and test datasets using a random 90/10 split, and we then divided the training + validation dataset into training and validation sets using a random 90/10 split. 
+  A big issue with the main types of documents people use to present information (word docs, presentation slides, spreadsheets) is that they are not compatible with the way people mentally represent information. Our thoughts and the interconnecting links between our thoughts are abstract and fluid, and they closely resemble a directed graph structure, where each edge represents a particular line of reasoning from a parent thought to a child thought. However, word docs and slides are linear in structure, and projecting our mental graph structure down to a linear structure essentially requires forcing us to think in a topological sort.
+</p>
+
+### Solution
+<p>
+  A graph structure is an information interface that better aligns with peoples' thought processes, and so a directed graph editor would be a better note-taking tool than traditional mediums of written information such as word docs and slides.
+</p>
+
+### My Approach
+<p>
+  I built a fully interactive directed graph editor using React, which gets and sets data via requests to a REST API that I designed using Django. This note-taker/planner allows users to specify the priority level of each task, which is used to determine the size of the nodes (priority 1 tasks are the biggest nodes, and priority 5 tasks are the smallest). Each node displays the title of the task and a short preview of the description. Full information for a task is displayed when the user selects a node. Every element in the graph visualizer is draggable and clickable. I used some code from <a href="https://github.com/uber/react-digraph">react-digraph</a> to provide the ui and the layout engine functionalities. 
 </p>
