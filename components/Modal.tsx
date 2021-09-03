@@ -95,6 +95,7 @@ export default class CustomModal extends Component<any, any> {
                                 value={this.state.activeItem.title}
                                 onChange={this.handleChange}
                                 placeholder="Enter Todo Title"
+                                autocomplete="off"
                                 />
                             </FormGroup>
                         }
@@ -123,6 +124,7 @@ export default class CustomModal extends Component<any, any> {
                                 name='description'
                                 onChange={this.handleChange}
                                 rows={5}
+                                autocomplete="off"
                                 />
                             </FormGroup>
                         }

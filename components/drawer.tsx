@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     drawerPaper: {
       width: drawerWidth,
-      backgroundColor: darkTheme.palette.text.disabled
+      backgroundColor: theme.palette.text.secondary
     },
     drawerContainer: {
         overflow: 'auto',
@@ -79,17 +79,17 @@ export default function PermanentDrawerRight({
     <div className={classes.toolbar} />
 
     <ModalHeader style={{justifyContent: "center", alignItems: "center"}}>
-      <h2 style={{fontWeight: 'bold', color: 'black' }}>
+      <h2 style={{fontWeight: 'bold', color: 'white' }}>
         {activeItem.title}
       </h2>
     </ModalHeader>
     
     <Divider />
     <ModalBody>
-      <p style={{fontWeight: 'bold', color: 'black' }}>
+      <p style={{fontWeight: 'bold', color: 'white' }}>
           Priority: {activeItem.priority}
       </p>
-      <p style={{color: 'black' }}>
+      <p style={{color: 'white' }}>
           {activeItem.description}
       </p>
     </ModalBody>
