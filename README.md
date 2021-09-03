@@ -1,6 +1,10 @@
 # Graph-Notes
 <p>Directed graph editor for note-taking and planning. Written in React and Django.</p>
+
+
 ![github](https://user-images.githubusercontent.com/29415393/131959817-4a9e9778-639e-41a5-aef7-5b3bfdcd8392.gif)
+
+
 
 ## Overview
 ### Problem
